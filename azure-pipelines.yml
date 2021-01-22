@@ -22,12 +22,15 @@ strategy:
 steps:
 - powershell: .\update-version.ps1
   displayName: Update version info
-- script: vcpkg install --triplet $(platform)-windows discord-game-sdk
+- script: git pull
+  displayName: 'Update vcpkg ports'
+  workingDirectory: C:\vcpkg
+- script: vcpkg install --triplet $(platform)-windows discord-game-sdk --debug
   displayName: 'Install Discord Game SDK'
   condition: and(succeeded(), eq(variables['platform'], 'x64'))
-- script: vcpkg install --triplet $(platform)-windows fmt spdlog
+- script: vcpkg install --triplet $(platform)-windows fmt spdlog --debug
   displayName: 'Install vcpkg dependencies'
-- script: vcpkg install --triplet $(platform)-windows --overlay-ports=$(Build.SourcesDirectory)/ports --head detours gtest member-thunk rapidjson wil
+- script: vcpkg install --triplet $(platform)-windows --overlay-ports=$(Build.SourcesDirectory)/ports --head detours gtest member-thunk rapidjson wil --debug
   displayName: 'Install vcpkg head dependencies'
 - task: NuGetCommand@2
   displayName: 'Restore NuGet packages'
